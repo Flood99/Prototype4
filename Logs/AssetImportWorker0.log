@@ -619,3 +619,12 @@ AssetImportParameters requested are different than current active one (requested
   custom:video-decoder-webm-vp8: 9c59270c3fd7afecdb556c50c9e8de78 -> 
   custom:audio-decoder-ogg-vorbis: bf7c407c2cedff20999df2af8eb42d56 -> 
   custom:audio-encoder-webm-vorbis: bf7c407c2cedff20999df2af8eb42d56 -> 
+========================================================================
+Received Import Request.
+  Time since last request: 1337.080620 seconds.
+  path: Assets/Scripts/PlayerController.cs
+  artifactKey: Guid(6b4c64f022b704e5b84f9f330118273c) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Scripts/PlayerController.cs using Guid(6b4c64f022b704e5b84f9f330118273c) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '3515ef732afc2a0b22d5693c7d9cd1a8') in 0.004395 seconds 
+  Import took 0.006297 seconds .
+
+AssetImportWorkerClient::OnTransportError - code=2 error=End of file
