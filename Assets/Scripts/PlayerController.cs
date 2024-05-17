@@ -13,6 +13,8 @@ public class PlayerController : MonoBehaviour
     private float powerupStrength = 15;
     public GameObject powerupIndicator;
     public GameObject projectile;
+    public float jumpForce = 500f;
+    private string state = "Grounded";
     // Start is called before the first frame update
     IEnumerator StrengthPowerupCountdownRoutine() 
     {
@@ -27,6 +29,16 @@ public class PlayerController : MonoBehaviour
         hasShooterPowerup = false;
         Debug.Log("Powerup over");
         powerupIndicator.gameObject.SetActive(false);
+        StopCoroutine(ShooterPowerupCountdownRoutine());
+        CancelInvoke();
+        
+    }
+    void BulletRing() 
+    {
+        for(int i = 0; i < 12; i++)
+        {
+            Instantiate(projectile,transform.position,Quaternion.Euler(0,i*30,0));
+        }
     }
     void Start()
     {
@@ -42,9 +54,10 @@ public class PlayerController : MonoBehaviour
         rb.AddForce(focalPoint.transform.forward*forwardInput*speed);
         powerupIndicator.transform.position = transform.position;
         Quaternion angle = transform.rotation;
-        if(Input.GetButtonDown("Fire1") && hasShooterPowerup)
+        if(state == "Grounded" && Input.GetKeyDown(KeyCode.Space))
         {
-            Instantiate(projectile,transform.position,Quaternion.Euler(0,transform.rotation.eulerAngles.y,0));
+           rb.AddForce(Vector3.up*jumpForce);
+           state = "InAir";
         }
     }
     void OnTriggerEnter(Collider other)
@@ -72,6 +85,8 @@ public class PlayerController : MonoBehaviour
                 Destroy(other.gameObject);
                 powerupIndicator.gameObject.SetActive(true);
                 StartCoroutine(ShooterPowerupCountdownRoutine());
+                InvokeRepeating("BulletRing",0f,2.0f);
+                
             }
           
         }
@@ -87,6 +102,23 @@ public class PlayerController : MonoBehaviour
             enemyRb.AddForce(awayFromPlayer * powerupStrength, ForceMode.Impulse);
             Debug.Log("Collision with " + collision.gameObject.name + " With Powerup");
 
+        }
+        if(collision.gameObject.CompareTag("Ground"))
+        {
+            if(state == "InAir")
+            {
+                
+                var obj = FindObjectsOfType<Enemy>();
+                for(int i = 0;i < obj.Length-1; i++)
+                {
+                    Vector3 explosionPos = transform.position;
+                    Rigidbody r = obj[i].GetComponent<Rigidbody>();
+                    r.AddExplosionForce(600f,explosionPos,70f,5f);
+                }
+            }
+            state = "Grounded";
+            Debug.Log("Ground");
+            
         }
 
     }
